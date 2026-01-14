@@ -90,6 +90,20 @@ public class CategoryMenuGUI {
             backButton.setItemMeta(backMeta);
             inv.setItem(49, backButton);
 
+            if (totalPages > 1) {
+                ItemStack pageInfo = new ItemStack(Material.PAPER);
+                ItemMeta pageMeta = pageInfo.getItemMeta();
+                pageMeta.setDisplayName(plugin.getShopConfig().getMessage("gui.page-info",
+                        "%current%", String.valueOf(finalPage + 1),
+                        "%total%", String.valueOf(totalPages)));
+                List<String> pageLore = new ArrayList<>();
+                pageLore.add(plugin.getShopConfig().getMessage("gui.total-items", "%amount%", String.valueOf(sortedItems.size())));
+                pageLore.add(plugin.getShopConfig().getMessage("gui.items-per-page", "%amount%", String.valueOf(itemsPerPage)));
+                pageMeta.setLore(pageLore);
+                pageInfo.setItemMeta(pageMeta);
+                inv.setItem(52, pageInfo);
+            }
+
             if (plugin.getShopConfig().getAllCategories().containsKey("bulk_" + category.toLowerCase())) {
                 ItemStack bulkSellButton = new ItemStack(Material.CHEST_MINECART);
                 ItemMeta bulkMeta = bulkSellButton.getItemMeta();
@@ -109,20 +123,6 @@ public class CategoryMenuGUI {
                 nextMeta.setLore(nextLore);
                 nextPage.setItemMeta(nextMeta);
                 inv.setItem(50, nextPage);
-            }
-
-            if (totalPages > 1) {
-                ItemStack pageInfo = new ItemStack(Material.PAPER);
-                ItemMeta pageMeta = pageInfo.getItemMeta();
-                pageMeta.setDisplayName(plugin.getShopConfig().getMessage("gui.page-info",
-                        "%current%", String.valueOf(finalPage + 1),
-                        "%total%", String.valueOf(totalPages)));
-                List<String> pageLore = new ArrayList<>();
-                pageLore.add(plugin.getShopConfig().getMessage("gui.total-items", "%amount%", String.valueOf(sortedItems.size())));
-                pageLore.add(plugin.getShopConfig().getMessage("gui.items-per-page", "%amount%", String.valueOf(itemsPerPage)));
-                pageMeta.setLore(pageLore);
-                pageInfo.setItemMeta(pageMeta);
-                inv.setItem(52, pageInfo);
             }
 
             double taxRate = plugin.getShopConfig().getTaxRate(category) * 100;

@@ -1,0 +1,11 @@
+category:
+  display-name: "Fish"
+  icon: COD
+  tax-rate: 7.0
+
+defaults:
+  min-stock: 0
+  max-stock: 1000
+  initial-stock: 100
+
+items:

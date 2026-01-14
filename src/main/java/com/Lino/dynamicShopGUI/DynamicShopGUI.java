@@ -63,7 +63,7 @@ public class DynamicShopGUI extends JavaPlugin {
         guiManager = new GUIManager(this);
 
         itemWorthManager = new ItemWorthManager(this);
-        itemWorthManager.start();
+//        itemWorthManager.start();
 
         autoSellChestManager = new AutoSellChestManager(this);
 

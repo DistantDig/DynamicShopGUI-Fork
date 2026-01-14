@@ -90,6 +90,10 @@ public class MainMenuGUI {
 
             CategoryConfigLoader.CategoryConfig category = entry.getValue();
 
+            if (category.toString().contains("bulk_")) {
+                continue;
+            }
+
             ItemStack categoryItem = new ItemStack(category.getIcon());
             ItemMeta meta = categoryItem.getItemMeta();
             meta.setDisplayName(plugin.getShopConfig().getMessage("gui.item-name", "%item%", category.getDisplayName()));

@@ -15,8 +15,9 @@ public class CategoryConfigLoader {
     private final Map<String, CategoryConfig> categories = new HashMap<>();
 
     private final String[] CATEGORY_FILES = {
-            "armor.yml", "building.yml", "farming.yml", "food.yml",
-            "ores.yml", "redstone.yml", "tools.yml", "mobdrops.yml", "fish.yml"
+            "armor.yml", "building.yml", "farming.yml", "food.yml", "floral.yml",
+            "ores.yml", "redstone.yml", "tools.yml", "mobdrops.yml", "fish.yml",
+            "bulk_fish.yml", "bulk_food.yml", "bulk_tools.yml"
     };
 
     public CategoryConfigLoader(DynamicShopGUI plugin) {

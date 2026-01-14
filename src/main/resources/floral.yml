@@ -1,0 +1,167 @@
+category:
+  display-name: "Floral"
+  icon: ENDER_PEARL
+  tax-rate: 15.0
+
+defaults:
+  min-stock: 0
+  max-stock: 1000
+  initial-stock: 100
+
+items:
+  # --- Honneycomb ---
+  HONEYCOMB:
+    price: 5.0
+    max-stock: 5000
+    initial-stock: 1000
+  HONEYCOMB_BLOCK:
+    price: 25.0
+    max-stock: 1000
+
+  # --- Succulents ---
+  NATURES_SPIRIT_ORNATE_SUCCULENT:
+    price: 1.0
+  NATURES_SPIRIT_DROWSY_SUCCULENT:
+    price: 1.0
+  NATURES_SPIRIT_AUREATE_SUCCULENT:
+    price: 1.0
+  NATURES_SPIRIT_SAGE_SUCCULENT:
+    price: 1.0
+  NATURES_SPIRIT_FOAMY_SUCCULENT:
+    price: 1.0
+  NATURES_SPIRIT_IMPERIAL_SUCCULENT:
+    price: 1.0
+  NATURES_SPIRIT_REGAL_SUCCULENT:
+    price: 1.0
+
+  # --- Water ---
+  LILY_PAD:
+    price: 1.0
+  NATURES_SPIRIT_HELVOLA_PAD:
+    price: 1.0
+  NATURES_SPIRIT_HELVOLA_FLOWER:
+    price: 1.0
+  NATURES_SPIRIT_LOTUS_FLOWER:
+    price: 1.0
+
+  # --- Misc Plants ---
+  CACTUS:
+    price: 1.0
+  NATURES_SPIRIT_ALLUAUDIA:
+    price: 1.0
+  FERN:
+    price: 1.0
+  CATTAIL:
+    price: 1.0
+  BIG_DRIPLEAF:
+    price: 1.0
+  SMALL_DRIPLEAF:
+    price: 1.0
+  GLOW_LICHEN:
+    price: 1.0
+
+  # --- Flowers ---
+  TORCHFLOWER:
+    price: 5.0
+    max-stock: 500
+    initial-stock: 50
+  PITCHER_PLANT:
+    price: 5.0
+    max-stock: 500
+    initial-stock: 50
+  CLOSED_EYEBLOSSOM:
+    price: 1.0
+  OPEN_EYEBLOSSOM:
+    price: 1.0
+  DANDELION:
+    price: 1.0
+  POPPY:
+    price: 1.0
+  BLUE_ORCHID:
+    price: 1.0
+  ALLIUM:
+    price: 1.0
+  AZURE_BLUET:
+    price: 1.0
+  RED_TULIP:
+    price: 1.0
+  ORANGE_TULIP:
+    price: 1.0
+  WHITE_TULIP:
+    price: 1.0
+  PINK_TULIP:
+    price: 1.0
+  OXEYE_DAISY:
+    price: 1.0
+  CORNFLOWER:
+    price: 1.0
+  LILY_OF_THE_VALLEY:
+    price: 1.0
+  CACTUS_FLOWER:
+    price: 1.0
+  PINK_PETALS:
+    price: 1.0
+  WILDFLOWERS:
+    price: 1.0
+  SPORE_BLOSSOM:
+    price: 1.0
+  FIREFLY_BUSH:
+    price: 1.0
+  SUNFLOWER:
+    price: 1.0
+  LILAC:
+    price: 1.0
+  ROSE_BUSH:
+    price: 1.0
+  PEONY:
+    price: 1.0
+  CAUPONA_SILPHIUM:
+    price: 1.0
+  NATURES_SPIRIT_MARIGOLD:
+    price: 1.0
+  NATURES_SPIRIT_BLUEBEELL:
+    price: 1.0
+  NATURES_SPIRIT_TIGER_LILY:
+    price: 1.0
+  NATURES_SPIRIT_PURPLE_WILDFLOWER:
+    price: 1.0
+  NATURES_SPIRIT_YELLOW_WILDFLOWER:
+    price: 1.0
+  NATURES_SPIRIT_RED_HEATHER:
+    price: 1.0
+  NATURES_SPIRIT_WHITE_HEATHER:
+    price: 1.0
+  NATURES_SPIRIT_PURPLE_HEATHER:
+    price: 1.0
+  NATURES_SPIRIT_ANEMONE:
+    price: 1.0
+  NATURES_SPIRIT_DWARF_BLOSSOMS:
+    price: 1.0
+  NATURES_SPIRIT_PROTEA:
+    price: 1.0
+  NATURES_SPIRIT_HIBISCUS:
+    price: 1.0
+  NATURES_SPIRIT_BLUE_IRIS:
+    price: 1.0
+  NATURES_SPIRIT_BLACK_IRIS:
+    price: 1.0
+  NATURES_SPIRIT_RUBY_BLOSSOMS:
+    price: 1.0
+  NATURES_SPIRIT_SILVERBUSH:
+    price: 1.0
+  NATURES_SPIRIT_LAVENDER:
+    price: 1.0
+  NATURES_SPIRIT_BLEEDING_HEART:
+    price: 1.0
+  NATURES_SPIRIT_BLUE_BULBS:
+    price: 1.0
+  NATURES_SPIRIT_CARNATION:
+    price: 1.0
+  NATURES_SPIRIT_GARDENIA:
+    price: 1.0
+  NATURES_SPIRIT_SNAPDRAGON:
+    price: 1.0
+  NATURES_SPIRIT_FOXGLOVE:
+    price: 1.0
+  NATURES_SPIRIT_BEGONIA:
+    price: 1.0

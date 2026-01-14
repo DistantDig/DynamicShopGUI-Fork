@@ -5,27 +5,27 @@
 
 # Item worth display
 item-worth:
-  worth-unit: "<gradient:#00ff00:#88ff00>Worth (1x): $%value%</gradient>"
-  worth-stack: "<gradient:#00ff00:#88ff00>Worth (Stack): $%value%</gradient>"
+  worth-unit: "<gradient:#00ff00:#88ff00>Worth (1x): ¤%value%</gradient>"
+  worth-stack: "<gradient:#00ff00:#88ff00>Worth (Stack): ¤%value%</gradient>"
   not-sellable: "<gradient:#ff0000:#ff8800>Not Sellable</gradient>"
-  shulker-contents: "<gradient:#ff0000:#ff8800>Contents Value: $%value%</gradient>"
+  shulker-contents: "<gradient:#ff0000:#ff8800>Contents Value: ¤%value%</gradient>"
 
 # General prefix
 prefix: "<gradient:#00ff00:#00ffff>[DynamicShop]</gradient> &7"
 
 # Transaction messages
 transaction:
-  buy-success: "<gradient:#00ff00:#88ff00>Successfully purchased %amount%x %item% for $%price%</gradient>"
-  sell-success: "<gradient:#00ff00:#88ff00>Successfully sold %amount%x %item% for $%price%</gradient>"
-  sell-success-with-tax: "<gradient:#00ff00:#88ff00>Successfully sold %amount%x %item% for $%price%</gradient> &7(Tax: $%tax%)"
-  sell-all-success: "<gradient:#00ff00:#88ff00>Sold %amount% items for $%price%</gradient> &7(Tax: $%tax%)"
-  sell-hand-success: "<gradient:#00ff00:#88ff00>Sold held item for $%price%</gradient> &7(Tax: $%tax%)"
+  buy-success: "<gradient:#00ff00:#88ff00>Successfully purchased %amount%x %item% for ¤%price%</gradient>"
+  sell-success: "<gradient:#00ff00:#88ff00>Successfully sold %amount%x %item% for ¤%price%</gradient>"
+  sell-success-with-tax: "<gradient:#00ff00:#88ff00>Successfully sold %amount%x %item% for ¤%price%</gradient> &7(Tax: $%tax%)"
+  sell-all-success: "<gradient:#00ff00:#88ff00>Sold %amount% items for ¤%price%</gradient> &7(Tax: $%tax%)"
+  sell-hand-success: "<gradient:#00ff00:#88ff00>Sold held item for ¤%price%</gradient> &7(Tax: $%tax%)"
   sell-nothing: "<gradient:#ff0000:#ff8800>No sellable items found!</gradient>"
   sell-no-item-hand: "<gradient:#ff0000:#ff8800>You are not holding a sellable item!</gradient>"
 
 # Error messages
 errors:
-  insufficient-funds: "<gradient:#ff0000:#ff8800>Insufficient funds! You need $%price%</gradient>"
+  insufficient-funds: "<gradient:#ff0000:#ff8800>Insufficient funds! You need ¤%price%</gradient>"
   insufficient-items: "<gradient:#ff0000:#ff8800>You don't have enough items to sell!</gradient>"
   out-of-stock: "<gradient:#ff0000:#ff8800>This item is currently out of stock!</gradient>"
   shop-full: "<gradient:#ff0000:#ff8800>The shop is full of this item!</gradient>"
@@ -52,14 +52,14 @@ restock:
 
 # Out of stock alert messages
 out-of-stock:
-  alert: "<gradient:#ff0000:#ff00ff>[OUT OF STOCK]</gradient> <gradient:#ffff00:#ff8800>%item% is now OUT OF STOCK! Price: $%price%</gradient>"
+  alert: "<gradient:#ff0000:#ff00ff>[OUT OF STOCK]</gradient> <gradient:#ffff00:#ff8800>%item% is now OUT OF STOCK! Price: ¤%price%</gradient>"
   title: "<gradient:#ff0000:#ff00ff>OUT OF STOCK!</gradient>"
   subtitle: "<gradient:#ffff00:#ff8800>%item% is no longer available</gradient>"
 
 # Price alert messages
 price-alerts:
-  increase: "<gradient:#ff0000:#ff00ff>[PRICE SURGE]</gradient> <gradient:#ffff00:#ff8800>%item% price increased by %percent%%! New price: $%price%</gradient>"
-  decrease: "<gradient:#00ff00:#00ffff>[PRICE DROP]</gradient> <gradient:#00ff00:#88ff00>%item% price decreased by %percent%%! New price: $%price%</gradient>"
+  increase: "<gradient:#ff0000:#ff00ff>[PRICE SURGE]</gradient> <gradient:#ffff00:#ff8800>%item% price increased by %percent%%! New price: ¤%price%</gradient>"
+  decrease: "<gradient:#00ff00:#00ffff>[PRICE DROP]</gradient> <gradient:#00ff00:#88ff00>%item% price decreased by %percent%%! New price: ¤%price%</gradient>"
 
   # Title alerts
   title-increase: "<gradient:#ff0000:#ff00ff>PRICE SURGE!</gradient>"
@@ -75,10 +75,11 @@ commands:
   players-only: "<gradient:#ff0000:#ff8800>This command can only be used by players!</gradient>"
   sell-usage: "<gradient:#ff0000:#ff8800>Usage: /sell <all|hand></gradient>"
   help-sell: "<gradient:#00ff00:#00ffff>/sell <all|hand></gradient> &7- Sell items to the shop"
+  open-success: "<gradient:#00ff00:#00ffff>Shop opened successfully for %player%</gradient>"
 
   # Top/Bestsellers command
   top-header: "<gradient:#ffd700:#ffaa00>═══════ Top Sellers (Revenue) ═══════</gradient>"
-  top-entry: "&e%rank%. &f%item% &7» Sold: %amount% | Earned: <gradient:#00ff00:#00ffff>$%value%</gradient>"
+  top-entry: "&e%rank%. &f%item% &7» Sold: %amount% | Earned: <gradient:#00ff00:#00ffff>¤%value%</gradient>"
   top-empty: "&cNo sales data recorded yet."
   top-loading: "&7Calculating top sellers..."
 
@@ -111,6 +112,14 @@ gui:
   tax-rate-label: "&8Tax Rate: &7%rate%%"
   click-to-open: "<gradient:#00ff00:#00ffff>» Click to open</gradient>"
 
+  # Bulk sell menu
+  bulk-sell-title: "<gradient:#ff0000:#ff8800>Bulk Sell - %category%</gradient>"
+  bulk-sell-button: "<gradient:#ff0000:#ff8800>Bulk Sell</gradient>"
+  clear-inventory: "<gradient:#ff0000:#ff8800>« Remove All Items</gradient>"
+  clear-inventory-desc: "&7Places all items back into your inventory"
+  bulk-sell: "<gradient:#00ff00:#88ff00>» Sell Items</gradient>"
+  bulk-sell-total: "&7Total Value: <gradient:#00ff00:#88ff00>$%total%</gradient>"
+
   # Navigation
   back-to-categories: "<gradient:#ff0000:#ff8800>Close Shop</gradient>"
   previous-page: "<gradient:#ffff00:#ff8800>« Previous Page</gradient>"
@@ -137,9 +146,9 @@ gui:
   # Item display
   item-name: "<gradient:#ffff00:#ff8800>%item%</gradient>"
   stock-display: "&7Stock: <gradient:#00ff00:#00ffff>%stock%/%max%</gradient>"
-  buy-price: "&7Buy Price: <gradient:#00ff00:#88ff00>$%price%</gradient>"
-  sell-price: "&7Sell Price: <gradient:#ff0000:#ff8800>$%price%</gradient>"
-  sell-price-with-tax: "&7Sell Price: <gradient:#ff0000:#ff8800>$%price%</gradient> &8(Net: $%net%)"
+  buy-price: "&7Buy Price: <gradient:#00ff00:#88ff00>¤%price%</gradient>"
+  sell-price: "&7Sell Price: <gradient:#ff0000:#ff8800>¤%price%</gradient>"
+  sell-price-with-tax: "&7Sell Price: <gradient:#ff0000:#ff8800>¤%price%</gradient> &8(Net: $%net%)"
   tax-rate: "&8Tax Rate: <gradient:#ff0000:#ff8800>%rate%%</gradient>"
   tax-exempt: "&8Tax: <gradient:#00ff00:#88ff00>Exempt</gradient>"
 

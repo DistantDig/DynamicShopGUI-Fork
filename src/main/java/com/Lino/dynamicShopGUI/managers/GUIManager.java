@@ -1,6 +1,7 @@
 package com.Lino.dynamicShopGUI.managers;
 
 import com.Lino.dynamicShopGUI.DynamicShopGUI;
+import com.Lino.dynamicShopGUI.gui.BulkSellMenuGUI;
 import com.Lino.dynamicShopGUI.gui.MainMenuGUI;
 import com.Lino.dynamicShopGUI.gui.CategoryMenuGUI;
 import com.Lino.dynamicShopGUI.gui.TransactionMenuGUI;
@@ -20,12 +21,14 @@ public class GUIManager {
     private final MainMenuGUI mainMenuGUI;
     private final CategoryMenuGUI categoryMenuGUI;
     private final TransactionMenuGUI transactionMenuGUI;
+    private final BulkSellMenuGUI bulkSellMenuGUI;
 
     public enum GUIType {
         MAIN_MENU,
         CATEGORY_MENU,
         TRANSACTION_BUY,
-        TRANSACTION_SELL
+        TRANSACTION_SELL,
+        BULK_SELL
     }
 
     public GUIManager(DynamicShopGUI plugin) {
@@ -33,6 +36,7 @@ public class GUIManager {
         this.mainMenuGUI = new MainMenuGUI(plugin);
         this.categoryMenuGUI = new CategoryMenuGUI(plugin, this);
         this.transactionMenuGUI = new TransactionMenuGUI(plugin, this);
+        this.bulkSellMenuGUI = new BulkSellMenuGUI(plugin, this);
     }
 
     public void openMainMenu(Player player) {
@@ -56,6 +60,12 @@ public class GUIManager {
         playerTransactionType.put(player.getUniqueId(), isBuying);
         playerGUIType.put(player.getUniqueId(), isBuying ? GUIType.TRANSACTION_BUY : GUIType.TRANSACTION_SELL);
         transactionMenuGUI.open(player, material, isBuying);
+    }
+
+    public void openBulkSellMenu(Player player, String category) {
+        playerCategory.put(player.getUniqueId(), category);
+        playerGUIType.put(player.getUniqueId(), GUIType.BULK_SELL);
+        bulkSellMenuGUI.open(player, category);
     }
 
     public String getPlayerCategory(UUID uuid) {

@@ -1,0 +1,11 @@
+category:
+  display-name: "Tools"
+  icon: BREAD
+  tax-rate: 5.0
+
+defaults:
+  min-stock: 0
+  max-stock: 1000
+  initial-stock: 100
+
+items:

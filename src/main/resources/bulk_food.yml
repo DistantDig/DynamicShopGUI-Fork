@@ -1,0 +1,14 @@
+category:
+  display-name: "Food"
+  icon: BREAD
+  tax-rate: 5.0
+
+defaults:
+  min-stock: 0
+  max-stock: 1000
+  initial-stock: 100
+
+items:
+  APPLE:
+    price: 5.0
+    max-stock: 3000

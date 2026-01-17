@@ -322,8 +322,11 @@ public class BulkSellMenuHandler {
                 ItemStatsReader.CombatStats gearStats = ItemStatsReader.getCombatStats(itemStack);
                 int rarityModifier = switch (gearStats.rarity()) {
                     case "reinforced", "resilient", "keen", "extended", "critical", "swift" -> 2;
-                    case "rare", "fortified", "sharp", "hasteful" -> 3;
-                    case "epic" -> 4;
+                    case "rare", "fortified", "sharp", "hasteful", "blessed", "warded" -> 3;
+                    case "epic", "air_infused", "air_infused_melee", "arcane_infused", "arcane_infused_melee",
+                         "eath_infused", "earth_infused_melee", "fire_infused", "fire_infused_melee",
+                         "frost_infused", "frost_infused_melee", "light_infused", "light_infused_melee",
+                         "water_infused", "water_infused_melee" -> 4;
                     case "legendary" -> 5;
                     default -> 1;
                 };

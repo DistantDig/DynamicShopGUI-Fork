@@ -40,23 +40,30 @@ public class ItemStatsReader {
         String rarity = null;
         ItemMeta itemMeta = itemStack.getItemMeta();
 
-        for (EquipmentSlots slot : EquipmentSlots.values()) {
-            Multimap<Attribute, AttributeModifier> attributes = itemStack.getType().getDefaultAttributeModifiers(
-                    slot.getSlot());
+        try {
+            for (EquipmentSlots slot : EquipmentSlots.values()) {
+                Multimap<Attribute, AttributeModifier> attributes =
+                        itemStack.getType().getDefaultAttributeModifiers(slot.getSlot());
 
-            for (AttributeModifier attribute : attributes.values()) {
-                if (attribute == null) continue;
+                for (AttributeModifier attribute : attributes.values()) {
+                    if (attribute == null) continue;
 
-                if (attribute.getKey().toString().contains("attack")) {
-                    attackTotal += Math.abs(attribute.getAmount());
-                }
-                if (attribute.getKey().toString().contains("armor")
-                        || attribute.getKey().toString().contains("health")
-                        || attribute.getKey().toString().contains("equipment")) {
-                    armorTotal += Math.abs(attribute.getAmount());
+                    if (attribute.getKey().toString().contains("attack")) {
+                        attackTotal += Math.abs(attribute.getAmount());
+                    }
+                    if (attribute.getKey().toString().contains("armor")
+                            || attribute.getKey().toString().contains("health")
+                            || attribute.getKey().toString().contains("equipment")) {
+                        armorTotal += Math.abs(attribute.getAmount());
+                    }
                 }
             }
+        } catch (Exception ignored) {
+            // Contains unsupported attribute or no valid attributes
+            attackTotal = 0;
+            armorTotal = 0;
         }
+
 
         if (itemMeta != null) {
             rarity = ComponentParser.parseGearRarity(itemMeta.getAsComponentString());

@@ -34,7 +34,9 @@ public class ShopCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("help")) {
                 sendHelpMessage(sender);
                 return true;
-            } else if (args[0].equalsIgnoreCase("reload")) {
+            }
+            // Command to reload the shop configuration (admin only)
+            else if (args[0].equalsIgnoreCase("reload")) {
                 if (!sender.hasPermission("dynamicshop.admin")) {
                     sender.sendMessage(plugin.getShopConfig().getMessage("commands.no-permission-reload"));
                     return true;
@@ -43,14 +45,18 @@ public class ShopCommand implements CommandExecutor {
                 plugin.getShopConfig().reload();
                 sender.sendMessage(plugin.getShopConfig().getMessage("commands.reload-success"));
                 return true;
-            } else if (args[0].equalsIgnoreCase("top") || args[0].equalsIgnoreCase("bestsellers")) {
+            }
+            // Command to display top-selling items (admin only)
+            else if (args[0].equalsIgnoreCase("top") || args[0].equalsIgnoreCase("bestsellers")) {
                 if (!sender.hasPermission("dynamicshop.admin")) {
                     sender.sendMessage(plugin.getShopConfig().getMessage("commands.no-permission"));
                     return true;
                 }
                 handleTopCommand(sender);
                 return true;
-            } else if (args.length > 1 && args[0].equalsIgnoreCase("give")) {
+            }
+            // Command to give the Auto-Harvester Hoe
+            else if (args.length > 1 && args[0].equalsIgnoreCase("give")) {
                 if (!sender.hasPermission("dynamicshop.admin")) {
                     sender.sendMessage(plugin.getShopConfig().getMessage("commands.no-permission"));
                     return true;
@@ -61,7 +67,9 @@ public class ShopCommand implements CommandExecutor {
                 } else if (args[1].equalsIgnoreCase("hoe")) {
                     return handleGiveHoe(sender, args);
                 }
-            } else if (args.length > 1 && args[0].equalsIgnoreCase("open")) {
+            }
+            // Command to open a specific category menu for a player (admin only)
+            else if (args.length > 1 && args[0].equalsIgnoreCase("open")) {
                 if (!sender.hasPermission("dynamicshop.admin")) {
                     sender.sendMessage(plugin.getShopConfig().getMessage("commands.no-permission"));
                     return true;
@@ -87,7 +95,9 @@ public class ShopCommand implements CommandExecutor {
                 sender.sendMessage(plugin.getShopConfig().getMessage("commands.open-success",
                         "%player%", target.getName()));
                 return true;
-            } else if (args[0].equalsIgnoreCase("debugItem")) {
+            }
+            // Debug command to inspect the item in hand and its corresponding ShopItem data
+            else if (args[0].equalsIgnoreCase("debugItem")) {
                 if (!sender.hasPermission("dynamicshop.admin")) {
                     sender.sendMessage(plugin.getShopConfig().getMessage("commands.no-permission"));
                     return true;

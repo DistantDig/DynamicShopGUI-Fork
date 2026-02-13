@@ -2,6 +2,7 @@ package com.Lino.dynamicShopGUI;
 
 import com.Lino.dynamicShopGUI.listeners.AutoSellChestListener;
 import com.Lino.dynamicShopGUI.listeners.AutoHarvesterListener;
+import com.Lino.dynamicShopGUI.listeners.OutpostListener;
 import com.Lino.dynamicShopGUI.managers.AutoSellChestManager;
 import com.Lino.dynamicShopGUI.managers.DiscordManager;
 import com.Lino.dynamicShopGUI.managers.ItemWorthManager;
@@ -123,6 +124,7 @@ public class DynamicShopGUI extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ShopListener(this), this);
         getServer().getPluginManager().registerEvents(new AutoSellChestListener(this), this);
         getServer().getPluginManager().registerEvents(new AutoHarvesterListener(this), this);
+        getServer().getPluginManager().registerEvents(new OutpostListener(this), this);
     }
 
     public static DynamicShopGUI getInstance() {

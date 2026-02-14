@@ -95,13 +95,6 @@ public class BulkSellMenuHandler {
 
     public void handleDrag(InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
-        ItemStack itemStack = event.getOldCursor();
-
-        plugin.getLogger().info("Held item: " + itemStack);
-        plugin.getLogger().info("Item allowed: " +
-                isAllowedItem(itemStack, plugin.getGUIManager().getPlayerCategory(player.getUniqueId())));
-        plugin.getLogger().info("Inventory match: " +
-                Objects.equals(event.getInventory(), event.getView().getTopInventory()));
 
         new BukkitRunnable() {
             @Override
@@ -153,9 +146,7 @@ public class BulkSellMenuHandler {
             }
 
             else if (category.contains("food")) {
-                boolean isFood = FoodReader.readFoodStats(itemStack).nutrition() > 0;
-                plugin.getLogger().info("IsAllowed check, has food: " + isFood);
-                return isFood;
+                return FoodReader.readFoodStats(itemStack).nutrition() > 0;
             }
 
             else if (category.contains("tools")) {

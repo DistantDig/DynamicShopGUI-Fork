@@ -3,7 +3,6 @@ package com.Lino.dynamicShopGUI.handlers;
 import com.Lino.dynamicShopGUI.DynamicShopGUI;
 import com.Lino.dynamicShopGUI.config.CategoryConfigLoader;
 import com.Lino.dynamicShopGUI.gui.BulkSellMenuGUI;
-import com.Lino.dynamicShopGUI.managers.ShopManager;
 import com.Lino.dynamicShopGUI.utils.ComponentParser;
 import com.Lino.dynamicShopGUI.utils.FoodReader;
 import com.Lino.dynamicShopGUI.utils.ItemStatsReader;
@@ -24,7 +23,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.Lino.dynamicShopGUI.gui.BulkSellMenuGUI.SELL_SLOT;
-import static com.Lino.dynamicShopGUI.utils.GUIUtils.formatMaterialName;
 
 public class BulkSellMenuHandler {
 
@@ -207,106 +205,162 @@ public class BulkSellMenuHandler {
         sellSlot.setItemMeta(sellSlotMeta);
         inv.setItem(SELL_SLOT, sellSlot);
 
-        Bukkit.getScheduler().runTask(plugin, () -> player.updateInventory());
+        Bukkit.getScheduler().runTask(plugin, player::updateInventory);
     }
 
     private void processSellTransaction(Player player) {
+        final String category = plugin.getGUIManager().getPlayerCategory(player.getUniqueId());
+
+        // Snapshot sell items first to avoid reading changing inventory later
+        final Map<Integer, ItemStack> itemsToSell = new LinkedHashMap<>();
         for (int slot : BulkSellMenuGUI.SELL_SLOTS) {
             ItemStack item = player.getOpenInventory().getItem(slot);
-            String category = plugin.getGUIManager().getPlayerCategory(player.getUniqueId());
-
             if (item != null && item.getType() != Material.AIR) {
-                sellItemStack(player, item, item.getAmount(), slot).thenAccept(result -> {
-                    plugin.getServer().getScheduler().runTask(plugin, () -> {
-
-                        if (result.isSuccess()) {
-                            player.sendMessage(plugin.getShopConfig().getPrefix() + result.getMessage());
-                            if (plugin.getShopConfig().isSoundEnabled()) {
-                                player.playSound(player.getLocation(), "entity.experience_orb.pickup", 0.7f, 1.0f);
-                            }
-                        }
-                        else {
-                            player.sendMessage(plugin.getShopConfig().getPrefix() + result.getMessage());
-                            if (plugin.getShopConfig().isSoundEnabled()) {
-                                player.playSound(player.getLocation(), "entity.villager.no", 0.5f, 1.0f);
-                            }
-                            returnItemsToPlayer(player, true);
-                        }
-
-                        plugin.getGUIManager().openBulkSellMenu(player, category);
-                    });
-                }).exceptionally(throwable -> {
-                    throwable.printStackTrace();
-
-                    plugin.getServer().getScheduler().runTask(plugin, () -> {
-                        player.sendMessage(plugin.getShopConfig().getMessage("errors.transaction-error"));
-                        plugin.getGUIManager().openBulkSellMenu(player, category);
-                    });
-
-                    return null;
-                });
+                itemsToSell.put(slot, item.clone());
             }
         }
+
+        if (itemsToSell.isEmpty()) {
+            player.sendMessage(plugin.getShopConfig().getPrefix() + plugin.getShopConfig().getMessage("errors.nothing-to-sell"));
+            if (plugin.getShopConfig().isSoundEnabled()) {
+                player.playSound(player.getLocation(), "entity.villager.no", 0.5f, 1.0f);
+            }
+            return;
+        }
+
+        List<CompletableFuture<SellComputation>> futures = new ArrayList<>();
+        for (Map.Entry<Integer, ItemStack> entry : itemsToSell.entrySet()) {
+            int slot = entry.getKey();
+            ItemStack stack = entry.getValue();
+            futures.add(sellItemStack(player, stack, stack.getAmount(), slot));
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                .thenApply(v -> futures.stream().map(CompletableFuture::join).toList())
+                .thenAccept(results -> plugin.getServer().getScheduler().runTask(plugin, () -> {
+                    // If any failed, abort safely and return items
+                    Optional<SellComputation> failed = results.stream().filter(r -> !r.success).findFirst();
+                    if (failed.isPresent()) {
+                        player.sendMessage(plugin.getShopConfig().getPrefix() + failed.get().message);
+                        if (plugin.getShopConfig().isSoundEnabled()) {
+                            player.playSound(player.getLocation(), "entity.villager.no", 0.5f, 1.0f);
+                        }
+                        returnItemsToPlayer(player, true);
+                        plugin.getGUIManager().openBulkSellMenu(player, category);
+                        return;
+                    }
+
+                    double grossTotal = 0.0;
+                    double taxTotal = 0.0;
+                    double netTotal = 0.0;
+                    int totalAmount = 0;
+
+                    // Apply inventory changes + logging exactly once on main thread
+                    for (SellComputation r : results) {
+                        player.getOpenInventory().setItem(r.slot, new ItemStack(Material.AIR));
+
+                        grossTotal += r.grossValue;
+                        taxTotal += r.tax;
+                        netTotal += r.netValue;
+                        totalAmount += r.amount;
+
+                        plugin.getDatabaseManager().logTransaction(
+                                player.getUniqueId().toString(),
+                                r.material,
+                                "SELL",
+                                r.amount,
+                                r.unitPrice,
+                                r.netValue
+                        );
+                    }
+
+                    grossTotal = BigDecimal.valueOf(grossTotal).setScale(2, RoundingMode.HALF_UP).doubleValue();
+                    taxTotal = BigDecimal.valueOf(taxTotal).setScale(2, RoundingMode.HALF_UP).doubleValue();
+                    netTotal = BigDecimal.valueOf(netTotal).setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+                    // ONE payment
+                    plugin.getEconomy().depositPlayer(player, netTotal);
+                    plugin.getItemWorthManager().clearCache();
+
+                    String message;
+                    if (taxTotal > 0) {
+                        message = plugin.getShopConfig().getMessage(
+                                "transaction.sell-success-with-tax",
+                                "%amount%", String.valueOf(totalAmount),
+                                "%item%", "items",
+                                "%price%", String.format("%.2f", netTotal),
+                                "%tax%", String.format("%.2f", taxTotal)
+                        );
+                    } else {
+                        message = plugin.getShopConfig().getMessage(
+                                "transaction.sell-success",
+                                "%amount%", String.valueOf(totalAmount),
+                                "%item%", "items",
+                                "%price%", String.format("%.2f", netTotal)
+                        );
+                    }
+
+                    player.sendMessage(plugin.getShopConfig().getPrefix() + message);
+                    if (plugin.getShopConfig().isSoundEnabled()) {
+                        player.playSound(player.getLocation(), "entity.experience_orb.pickup", 0.7f, 1.0f);
+                    }
+
+                    // reopen ONCE
+                    plugin.getGUIManager().openBulkSellMenu(player, category);
+                }))
+                .exceptionally(throwable -> {
+                    throwable.printStackTrace();
+                    plugin.getServer().getScheduler().runTask(plugin, () -> {
+                        player.sendMessage(plugin.getShopConfig().getMessage("errors.transaction-error"));
+                        returnItemsToPlayer(player, true);
+                        plugin.getGUIManager().openBulkSellMenu(player, category);
+                    });
+                    return null;
+                });
     }
 
-    private CompletableFuture<ShopManager.TransactionResult> sellItemStack(Player player, ItemStack itemStack, int amount, int slot) {
+    private CompletableFuture<SellComputation> sellItemStack(Player player, ItemStack itemStack, int amount, int slot) {
         Material material = itemStack.getType();
         String category = plugin.getGUIManager().getPlayerCategory(player.getUniqueId());
         double configValue = getConfigPrice(itemStack, category);
 
-        return plugin.getDatabaseManager().getShopItem(material).thenCompose(item -> {
+        return plugin.getDatabaseManager().getShopItem(material).thenApply(item -> {
             if (item == null && !isAllowedItem(itemStack, category)) {
-                return CompletableFuture.completedFuture(
-                        new ShopManager.TransactionResult(false, "This item cannot be sold"));
+                return SellComputation.failure(slot, "This item cannot be sold");
             }
 
-            player.getOpenInventory().setItem(slot, new ItemStack(Material.AIR));
+            double grossValue = addModifiers(itemStack, configValue, category) * amount;
+            grossValue = BigDecimal.valueOf(grossValue).setScale(2, RoundingMode.HALF_UP).doubleValue();
 
-            double totalValue = addModifiers(itemStack, configValue * itemStack.getAmount(), category);
-            totalValue = BigDecimal.valueOf(totalValue)
-                    .setScale(2, RoundingMode.HALF_UP)
-                    .doubleValue();
+            double tax = plugin.getShopConfig().calculateTax(material, category, grossValue);
+            tax = BigDecimal.valueOf(tax).setScale(2, RoundingMode.HALF_UP).doubleValue();
 
-            double tax = plugin.getShopConfig().calculateTax(material, category, totalValue);
-            double netEarnings = totalValue - tax;
+            double netValue = BigDecimal.valueOf(grossValue - tax).setScale(2, RoundingMode.HALF_UP).doubleValue();
 
-            plugin.getEconomy().depositPlayer(player, netEarnings);
-            plugin.getDatabaseManager().logTransaction(player.getUniqueId().toString(),
-                    material, "SELL", amount, totalValue / amount, netEarnings);
-            plugin.getItemWorthManager().clearCache();
+            double unitPrice = amount > 0
+                    ? BigDecimal.valueOf(grossValue / amount).setScale(2, RoundingMode.HALF_UP).doubleValue()
+                    : 0.0;
 
-            String message;
-            if (tax > 0) {
-                message = plugin.getShopConfig().getMessage("transaction.sell-success-with-tax",
-                        "%amount%", String.valueOf(amount),
-                        "%item%", formatMaterialName(material),
-                        "%price%", String.format("%.2f", netEarnings),
-                        "%tax%", String.format("%.2f", tax));
-            } else {
-                message = plugin.getShopConfig().getMessage("transaction.sell-success",
-                        "%amount%", String.valueOf(amount),
-                        "%item%", formatMaterialName(material),
-                        "%price%", String.format("%.2f", netEarnings));
-            }
-
-            return CompletableFuture.completedFuture(new ShopManager.TransactionResult(true, message));
+            return SellComputation.success(slot, material, amount, grossValue, tax, netValue, unitPrice);
         }).exceptionally(throwable -> {
             throwable.printStackTrace();
-            return new ShopManager.TransactionResult(false, "An error occurred during the transaction");
+            return SellComputation.failure(slot, "An error occurred during the transaction");
         });
     }
 
     private double addModifiers(ItemStack itemStack, double baseValue, String category) {
         ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta == null) return baseValue;
+        if (itemMeta == null || category == null) return baseValue;
 
-        switch (category){
-            case "bulk_food":
+        switch (category) {
+            case "bulk_food" -> {
                 FoodReader.FoodStats foodStats = FoodReader.readFoodStats(itemStack);
                 return baseValue + ((double) foodStats.nutrition() / 8) + (foodStats.saturationModifier() / 8);
-            case "bulk_fish":
-                if (itemMeta.getAsComponentString().contains("starcatcher")) {
-                    ComponentParser.FishStats fishStats =  ComponentParser.parseFishStats(itemMeta.getAsComponentString());
+            }
+            case "bulk_fish" -> {
+                String component = itemMeta.getAsComponentString();
+                if (component != null && component.contains("starcatcher")) {
+                    ComponentParser.FishStats fishStats = ComponentParser.parseFishStats(component);
                     int rarityModifier = switch (fishStats.rarity) {
                         case "uncommon" -> 2;
                         case "rare" -> 3;
@@ -314,11 +368,11 @@ public class BulkSellMenuHandler {
                         case "legendary" -> 5;
                         default -> 1;
                     };
-
-                    return (baseValue + (fishStats.size / 100) + (fishStats.weight / 1000)) * rarityModifier;
+                    return (baseValue + (fishStats.size / 100.0) + (fishStats.weight / 1000.0)) * rarityModifier;
                 }
-                break;
-            case "bulk_tools":
+                return baseValue;
+            }
+            case "bulk_tools" -> {
                 ItemStatsReader.CombatStats gearStats = ItemStatsReader.getCombatStats(itemStack);
                 int rarityModifier = switch (gearStats.rarity()) {
                     case "reinforced", "resilient", "keen", "extended", "critical", "swift" -> 2;
@@ -330,10 +384,47 @@ public class BulkSellMenuHandler {
                     case "legendary" -> 5;
                     default -> 1;
                 };
-
                 return (baseValue + (10 * gearStats.attackDamage()) + (10 * gearStats.armor())) * rarityModifier;
+            }
+            default -> {
+                plugin.getLogger().warning("Category " + category + " is unaccounted for.");
+                return baseValue;
+            }
         }
-        plugin.getLogger().warning("Category " + category + " is unaccounted for.");
-        return baseValue;
+    }
+
+    // Helper DTO
+    private static final class SellComputation {
+        final boolean success;
+        final int slot;
+        final Material material;
+        final int amount;
+        final double grossValue;
+        final double tax;
+        final double netValue;
+        final double unitPrice;
+        final String message;
+
+        private SellComputation(boolean success, int slot, Material material, int amount,
+                                double grossValue, double tax, double netValue, double unitPrice, String message) {
+            this.success = success;
+            this.slot = slot;
+            this.material = material;
+            this.amount = amount;
+            this.grossValue = grossValue;
+            this.tax = tax;
+            this.netValue = netValue;
+            this.unitPrice = unitPrice;
+            this.message = message;
+        }
+
+        static SellComputation success(int slot, Material material, int amount,
+                                       double grossValue, double tax, double netValue, double unitPrice) {
+            return new SellComputation(true, slot, material, amount, grossValue, tax, netValue, unitPrice, null);
+        }
+
+        static SellComputation failure(int slot, String message) {
+            return new SellComputation(false, slot, Material.AIR, 0, 0, 0, 0, 0, message);
+        }
     }
 }

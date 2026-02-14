@@ -17,9 +17,9 @@ prefix: "<gradient:#00ff00:#00ffff>[DynamicShop]</gradient> &7"
 transaction:
   buy-success: "<gradient:#00ff00:#88ff00>Successfully purchased %amount%x %item% for ¤%price%</gradient>"
   sell-success: "<gradient:#00ff00:#88ff00>Successfully sold %amount%x %item% for ¤%price%</gradient>"
-  sell-success-with-tax: "<gradient:#00ff00:#88ff00>Successfully sold %amount%x %item% for ¤%price%</gradient> &7(Tax: $%tax%)"
-  sell-all-success: "<gradient:#00ff00:#88ff00>Sold %amount% items for ¤%price%</gradient> &7(Tax: $%tax%)"
-  sell-hand-success: "<gradient:#00ff00:#88ff00>Sold held item for ¤%price%</gradient> &7(Tax: $%tax%)"
+  sell-success-with-tax: "<gradient:#00ff00:#88ff00>Successfully sold %amount%x %item% for ¤%price%</gradient> &7(Tax: ¤%tax%)"
+  sell-all-success: "<gradient:#00ff00:#88ff00>Sold %amount% items for ¤%price%</gradient> &7(Tax: ¤%tax%)"
+  sell-hand-success: "<gradient:#00ff00:#88ff00>Sold held item for ¤%price%</gradient> &7(Tax: ¤%tax%)"
   sell-nothing: "<gradient:#ff0000:#ff8800>No sellable items found!</gradient>"
   sell-no-item-hand: "<gradient:#ff0000:#ff8800>You are not holding a sellable item!</gradient>"
 
@@ -119,7 +119,7 @@ gui:
   clear-inventory: "<gradient:#ff0000:#ff8800>« Remove All Items</gradient>"
   clear-inventory-desc: "&7Places all items back into your inventory"
   bulk-sell: "<gradient:#00ff00:#88ff00>» Sell Items</gradient>"
-  bulk-sell-total: "&7Total Value: <gradient:#00ff00:#88ff00>$%total%</gradient>"
+  bulk-sell-total: "&7Total Value: <gradient:#00ff00:#88ff00>¤%total%</gradient>"
 
   # Navigation
   back-to-categories: "<gradient:#ff0000:#ff8800>Close Shop</gradient>"
@@ -141,15 +141,15 @@ gui:
 
   # Balance
   balance-label: "<gradient:#00ff00:#88ff00>Your Balance</gradient>"
-  balance-current: "&7Current: <gradient:#00ff00:#88ff00>$%balance%</gradient>"
-  balance-display: "<gradient:#00ff00:#88ff00>Balance: $%balance%</gradient>"
+  balance-current: "&7Current: <gradient:#00ff00:#88ff00>¤%balance%</gradient>"
+  balance-display: "<gradient:#00ff00:#88ff00>Balance: ¤%balance%</gradient>"
 
   # Item display
   item-name: "<gradient:#ffff00:#ff8800>%item%</gradient>"
   stock-display: "&7Stock: <gradient:#00ff00:#00ffff>%stock%/%max%</gradient>"
   buy-price: "&7Buy Price: <gradient:#00ff00:#88ff00>¤%price%</gradient>"
   sell-price: "&7Sell Price: <gradient:#ff0000:#ff8800>¤%price%</gradient>"
-  sell-price-with-tax: "&7Sell Price: <gradient:#ff0000:#ff8800>¤%price%</gradient> &8(Net: $%net%)"
+  sell-price-with-tax: "&7Sell Price: <gradient:#ff0000:#ff8800>¤%price%</gradient> &8(Net: ¤%net%)"
   tax-rate: "&8Tax Rate: <gradient:#ff0000:#ff8800>%rate%%</gradient>"
   tax-exempt: "&8Tax: <gradient:#00ff00:#88ff00>Exempt</gradient>"
 
@@ -166,10 +166,10 @@ gui:
   # Transaction buttons
   buy-amount: "<gradient:#00ff00:#88ff00>Buy %amount%</gradient>"
   sell-amount: "<gradient:#00ff00:#88ff00>Sell %amount%</gradient>"
-  total-cost: "&7Total cost: <gradient:#00ff00:#88ff00>$%cost%</gradient>"
-  total-earnings: "&7Total earnings: <gradient:#00ff00:#88ff00>$%earn%</gradient>"
-  tax-deduction: "&8Tax: <gradient:#ff0000:#ff8800>-$%tax%</gradient>"
-  net-earnings: "&7Net earnings: <gradient:#00ff00:#88ff00>$%net%</gradient>"
+  total-cost: "&7Total cost: <gradient:#00ff00:#88ff00>¤%cost%</gradient>"
+  total-earnings: "&7Total earnings: <gradient:#00ff00:#88ff00>¤%earn%</gradient>"
+  tax-deduction: "&8Tax: <gradient:#ff0000:#ff8800>-¤%tax%</gradient>"
+  net-earnings: "&7Net earnings: <gradient:#00ff00:#88ff00>¤%net%</gradient>"
 
   # Shop guide
   shop-guide-title: "<gradient:#ff00ff:#8800ff>Shop Guide</gradient>"
@@ -191,7 +191,7 @@ autosell:
   received: "&aYou have received %amount% <gradient:#55FF55:#FFFF55>AutoSell Chest(s)</gradient>&a!"
   placed: "&aYou have placed an <gradient:#55FF55:#FFFF55>AutoSell Chest</gradient>&a. It will sell its contents in 5 minutes."
   broken: "&cYou have broken an <gradient:#FFAA00:#FF5555>AutoSell Chest</gradient>&c."
-  success: "&aYour AutoSell Chest has sold items for a total of &e$&f%value%&a!"
+  success: "&aYour AutoSell Chest has sold items for a total of &e¤&f%value%&a!"
   admin-give-success: "&aYou have given %amount% AutoSell chest(s) to %player%."
 
   chest-name: "<gradient:#55FF55:#FFFF55>AutoSell Chest</gradient>"
@@ -207,7 +207,7 @@ autosell:
 auto-harvester:
   received: "&aYou have received %amount% <gradient:#00ff00:#ffff00>Auto Harvester Hoe(s)</gradient>&a!"
   admin-give-success: "&aYou have given %amount% Auto Harvester hoe(s) to %player%."
-  harvest-success: "<gradient:#00ff00:#88ff00>+%amount% %item%</gradient> &7→ <gradient:#ffd700:#ffaa00>+$%earnings%</gradient>"
+  harvest-success: "<gradient:#00ff00:#88ff00>+%amount% %item%</gradient> &7→ <gradient:#ffd700:#ffaa00>+¤%earnings%</gradient>"
   not-sellable: "&cCannot sell %item%, dropping items instead."
   not-fully-grown: "<gradient:#ff0000:#ff8800>✖ Crop is not fully grown!</gradient>"
 

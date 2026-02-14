@@ -1,7 +1,5 @@
 package com.Lino.dynamicShopGUI.utils;
 
-import com.Lino.dynamicShopGUI.DynamicShopGUI;
-
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,19 +57,15 @@ public class ComponentParser {
                 "\\b" + Pattern.quote(key) + "\\s*=\\s*(?:\\\\\")?\"(.*?)(?:\\\\\")?\""
         );
         Matcher matcher = gearPattern.matcher(componentString);
-        DynamicShopGUI.getInstance().getLogger().info("Regex: " + gearPattern.matcher(componentString).find());
 
         if (matcher.find()) {
             String value = matcher.group(1).trim(); // e.g. tiered:standard_weapons/common
             if (value.isEmpty()) return null;
-            DynamicShopGUI.getInstance().getLogger().info("Value: " + value);
 
             int slash = value.lastIndexOf('/');
-            DynamicShopGUI.getInstance().getLogger().info("Slash index: " + slash);
             if (slash < 0 || slash == value.length() - 1) return null;
 
             String rarity = value.substring(slash + 1).trim().toLowerCase(Locale.ROOT);
-            DynamicShopGUI.getInstance().getLogger().info("Rarity: " + rarity);
             if (rarity.isEmpty()) return null;
 
             return rarity;
